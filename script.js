@@ -54,12 +54,29 @@ class Canvas {
         this.context.strokeStyle = "#ddd";
         this.context.stroke();
     }
+    convertPointsToPixels(pointX,pointY) {
+        return [ pointX * this.width/2 + this.width/2, -pointY * this.width/2 + this.width/2 ];
+    }
+    drawIndicator(label,x,y) {
+        var pxCoords = this.convertPointsToPixels(x ,y)
+        pxCoords[0] -= 3;
+        pxCoords[1] -= 10
+        this.context.beginPath();
+        this.context.arc(pxCoords[0]+3, pxCoords[1]-3, 10, 0, 2*Math.PI);
+        this.context.fillStyle = "#ccc";
+        this.context.fill();
+        this.context.stroke();
+        this.context.font = "10px Arial";
+        this.context.fillStyle = "black"
+        this.context.fillText(label,pxCoords[0],pxCoords[1])
+    }
     drawPoints(x,y) {
-        function convertPointsToPixels(self, pointX,pointY) {
-            return [ pointX * self.width/2 + self.width/2, -pointY * self.width/2 + self.width/2 ];
-        }
-        let pxCoords = convertPointsToPixels(this, x,y);
+        let pxCoords = this.convertPointsToPixels(x,y);
         this.context.fillStyle = "red";
+        this.context.fillRect(pxCoords[0], pxCoords[1], 1, 1);
+    }
+    pixelize(x,y){
+        let pxCoords = this.convertPointsToPixels(x,y);
         this.context.fillRect(pxCoords[0], pxCoords[1], 1, 1);
     }
 }
@@ -67,8 +84,7 @@ class Canvas {
 class Experiment {
     numberX;
     numberY;
-    addNumber;
-    maxIterations
+    maxIterations;
     consoleReference;
     canvasReference;
     startTime;
@@ -76,54 +92,76 @@ class Experiment {
     constructor(csl,cvs) {
         this.consoleReference = csl;
         this.canvasReference = cvs;
-        //this.isInputchanged();
+        this.numberX = 0.0;
+        this.numberY = 0.0;
+        this.maxIterations = 4;
     }
     isInputchanged() {
         this.numberX = parseFloat(document.querySelector("input[id*='number-x']").value);
         this.numberY = parseFloat(document.querySelector("input[id*='number-y']").value);
-        this.addNumber = parseFloat(document.querySelector("input[id*='addNumber']").value);
         this.maxIterations = document.querySelector("input[id*='maxIterations']").value;
-        this.execute();
+        this.analysePoint();
     }
-    execute() {
-        this.startTime = Date.now();
+    analysePoint() {
         this.consoleReference.cleanConsole();
         this.consoleReference.print("Executing...")
+        this.startTime = Date.now();
         this.canvasReference.clearCanvas();
+        this.canvasReference.drawIndicator("C",this.numberX, this.numberY);
+
+        const cX = this.numberX;
+        const xY = this.numberY;
         for (var index=0; index<this.maxIterations; index++) {
-            this.consoleReference.print(this.numberX + " | " + this.numberY);
+            this.consoleReference.print(this.numberX.toFixed(5) + " | " + this.numberY.toFixed(5));
             this.canvasReference.drawPoints(this.numberX, this.numberY);
+
             var tempX = this.numberX;
             var tempY = this.numberY;
-            this.numberX = Math.pow(tempX,2) - Math.pow(tempY,2);
-            this.numberY = 2*tempX*tempY + this.addNumber;
+            this.numberX = Math.pow(tempX,2) - Math.pow(tempY,2) + cX;
+            this.numberY = 2*tempX*tempY + xY;
         }
-        this.consoleReference.print("[INFO] Milisseconds Elapsed: "+ Date.now() - this.startTime);
+        this.consoleReference.print("[INFO] Milisseconds Elapsed: "+ (Date.now() - this.startTime).toString());
     }
+
 }
 
 let csl = new Console;
 let cvs = new Canvas(csl);
 let exp = new Experiment(csl,cvs);
 
-document.querySelector("input[id*='number-x']").addEventListener('change', function () {
+let inputX = document.querySelector("input[id*='number-x']");
+let inputY = document.querySelector("input[id*='number-y']");
+inputX.addEventListener('change', function () {
     exp.isInputchanged();
 });
-document.querySelector("input[id*='number-y']").addEventListener('change', function () {
-    exp.isInputchanged();
-});
-document.querySelector("input[id*='addNumber']").addEventListener('change', function () {
+inputY.addEventListener('change', function () {
     exp.isInputchanged();
 });
 document.querySelector("input[id*='maxIterations']").addEventListener('change', function () {
     exp.isInputchanged();
 });
-// document.querySelector("button[id*='goButton']").addEventListener('click', function () {
-//     exp.execute();
-// });
+
 document.querySelector("button[id*='clearCanvas']").addEventListener('click', function() {
     cvs.clearCanvas();
 });
 document.querySelector("button[id*='clearConsole']").addEventListener('click', function() {
     csl.cleanConsole();
+});
+
+document.querySelector("body").addEventListener('keydown', function(e) {
+    switch(e.code) {
+        case 'ArrowUp':
+            inputY.value = (parseFloat(inputY.value) + 0.01).toFixed(2);
+            break;
+        case 'ArrowDown' :
+            inputY.value = (parseFloat(inputY.value) - 0.01).toFixed(2);
+            break;
+        case 'ArrowLeft' :
+            inputX.value = (parseFloat(inputX.value) - 0.01).toFixed(2);
+            break;
+        case 'ArrowRight' :
+            inputX.value = (parseFloat(inputX.value) + 0.01).toFixed(2);
+            break;
+    }
+    exp.isInputchanged();
 });
