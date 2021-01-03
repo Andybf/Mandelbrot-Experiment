@@ -16,14 +16,22 @@
     font-weight: lighter;
 }
 
+:root {
+    --fontColor: #333;
+    --primaryBackground: rgb(255, 255, 255);
+    --SencondaryBackground: #fff;
+    --primaryShadow: #ddd;
+    --secondaryShadow: #f5f5f5;
+}
+
+html {
+    height: 100%;
+    background-color: var(--primaryBackground);
+}
+
 body {
     width: 1080px;
     margin: auto
-}
-
-section {
-    padding-top: 15px;
-    padding-bottom: 15px;
 }
 
 label {
@@ -52,18 +60,21 @@ label {
     align-items: center;
     font-size: 14px;
 }
-
+comp-console {
+    width: 400px;
+}
 
 .container {
     display: flex;
-    justify-content: space-between;
-}
-.container > section {
-    width: 49%;
+    justify-content: center;
+    column-gap: 20px;
+    padding: 20px;
 }
 
 canvas.canvas {
     padding: 0px;
+    width: inherit;
+    height: inherit;
 }
 
 .default-button {
@@ -85,8 +96,21 @@ section.console-control {
     justify-content: space-between;
 }
 
+.console-container {
+    min-width: 33%;
+}
+
+.canvas-container {
+    min-width: 33%;
+}
+
+.canvas-wrapper {
+    padding:0;
+    width: 600px;
+    height: 600px;
+}
+
 section.control-panel {
-    margin-top: 15px;
     padding: 10px;
     background-image: linear-gradient(180deg, #fff, #f4f4f4);
     display: flex;
