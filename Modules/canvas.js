@@ -36,13 +36,11 @@ export default class Canvas extends HTMLElement {
     }
 
     connectedCallback() { // After Comp Load
-        this.zoom = 2;
         this.element = this.querySelector("canvas");
         this.context = this.element.getContext("2d");
         this.width = parseFloat(getComputedStyle(this.element)['width'])
         this.height = parseFloat(getComputedStyle(this.element)['height']);
         this.resizeDrawScreen();
-        this.querySelector("button[id*='clearCanvas']").addEventListener('click', this.clearCanvas);
         console.log("[INFO] Canvas Initialized.");
     }
 
@@ -55,27 +53,36 @@ export default class Canvas extends HTMLElement {
         this.context.canvas.height = this.height;
         this.context.fillStyle = "#fff";
         this.context.fillRect(0,0, this.width, this.height);
-        this.drawAxis();
+        //this.drawAxis();
     }
     clearCanvas() {
-        var self = this.parentElement.parentElement;
-        self.context.clearRect(0,0, this.width, this.height);
-        self.resizeDrawScreen();
+        this.context.clearRect(0,0, this.width, this.height);
+        this.resizeDrawScreen();
     }
     drawAxis() {
         this.context.beginPath();
-        this.context.moveTo(this.width/2,0);
-        this.context.lineTo(this.width/2,this.height);
-        this.context.moveTo(0,this.height/2);
-        this.context.lineTo(this.width,this.height/2);
+        this.context.moveTo(this.width/this.zoom,0);
+        this.context.lineTo(this.width/this.zoom,this.height);
+        this.context.moveTo(0,this.height/this.zoom);
+        this.context.lineTo(this.width,this.height/this.zoom);
         this.context.strokeStyle = "#ddd";
         this.context.stroke();
     }
     convertPointsToPixels(pointX,pointY) {
         return [
-             pointX * this.width/this.zoom + this.width/this.zoom,
-            -pointY * this.width/this.zoom + this.width/this.zoom
+             pointX * this.width/this.zoom + this.width/this.zoom*2,
+            -pointY * this.width/this.zoom + this.width/this.zoom*1.5
         ];
+    }
+    drawPoints(x,y,lightLevel) {
+        var color = '#'+lightLevel.toString(16) + lightLevel.toString(16) + lightLevel.toString(16);
+        let pxCoords = this.convertPointsToPixels(x,y);
+        this.context.fillStyle = color;
+        this.context.fillRect(pxCoords[0], pxCoords[1], .5, .5);
+    }
+    drawPixels(x,y) {
+        this.context.fillStyle = "black";
+        this.context.fillRect(x, y, 1, 1);
     }
     drawIndicator(label,x,y) {
         var pxCoords = this.convertPointsToPixels(x ,y)
@@ -89,14 +96,5 @@ export default class Canvas extends HTMLElement {
         this.context.font = "10px Arial";
         this.context.fillStyle = "black"
         this.context.fillText(label,pxCoords[0],pxCoords[1])
-    }
-    drawPoints(x,y) {
-        let pxCoords = this.convertPointsToPixels(x,y);
-        this.context.fillStyle = "black";
-        this.context.fillRect(pxCoords[0], pxCoords[1], 1, 1);
-    }
-    drawPixels(x,y) {
-        this.context.fillStyle = "black";
-        this.context.fillRect(x, y, 1, 1);
     }
 }

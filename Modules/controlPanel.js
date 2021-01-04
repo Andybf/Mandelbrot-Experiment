@@ -26,31 +26,20 @@ export default class ControlPanel extends HTMLElement {
                     <input type="number" class="default-input default-border" id="maxIterations" value="35" step="1" min="1" max="512" />
                     
                     <label>Zoom</label>
-                    <input type="number" class="default-input default-border" id="zoom" value="2.0" step="0.1" min="0" max="512" />
+                    <input type="number" class="default-input default-border" id="zoom" value="3.0" step="0.1" min="0" max="512" />
+
+                    <label>Point to Pixel Ratio</label>
+                    <input type="number" class="default-input default-border" id="ratio" value="4.0" step="0.1" min="0.5" max="512" />
+
+                    <button id="executeButton" class="default-button  default-border" >Execute</button>
                     
-                    <button class="default-button default-border" id="start-button">Start!</button>
                 </div>
             </section>
         `
     }
     connectedCallback() {
-        
-        // this.querySelector("input[id*='number-x']").addEventListener('change', function () {
-        //     self.isInputchanged();
-        // });
-        // this.querySelector("input[id*='number-y']").addEventListener('change', function () {
-        //     self.isInputchanged();
-        // });
-        this.querySelector("input[id*='maxIterations']").addEventListener('change', function () {
-            self.isInputchanged();
-        });
-        this.querySelector("input[id*='zoom']").addEventListener('change', function () {
-            self.isInputchanged();
-        });
-        this.querySelector("button[id*='start-button']").addEventListener('click', function() {
-            self.startAnalyse();
-        });
     }
 
     /* Class Methods =======================================================*/
+    
 }

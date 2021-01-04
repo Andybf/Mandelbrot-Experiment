@@ -16,8 +16,27 @@ customElements.define("comp-controlpanel",    ControlPanel);
 
 let canvas = document.querySelector("comp-canvascontainer");
 let console = document.querySelector("comp-console");
+let control = document.querySelector("comp-controlpanel");
+
 let experiment = new Experiment(canvas,console);
 experiment.startAnalyse();
+
+document.querySelector("input[id*='maxIterations']").addEventListener('change', function(event) {
+    experiment.maxIterations = event.target.value;
+});
+
+document.querySelector("input[id*='zoom']").addEventListener('change', function(event) {
+    canvas.zoom = event.target.value;
+});
+
+document.querySelector("input[id='ratio']").addEventListener('change', function(event) {
+    experiment.pointRatio = event.target.value/canvas.width;
+});
+
+document.querySelector("button[id='executeButton']").addEventListener('click', function(event) {
+    canvas.clearCanvas();
+    experiment.startAnalyse();
+});
 
 
 // document.querySelector("body").addEventListener('keydown', function(e) {

@@ -68,7 +68,7 @@ comp-console {
     display: flex;
     justify-content: center;
     column-gap: 20px;
-    padding: 20px;
+    margin-top: 20px
 }
 
 canvas.canvas {
@@ -106,8 +106,8 @@ section.console-control {
 
 .canvas-wrapper {
     padding:0;
-    width: 600px;
-    height: 600px;
+    width: 640px;
+    height: 640px;
 }
 
 section.control-panel {
