@@ -14,6 +14,11 @@ export default class Experiment {
     maxIterations;
     pointRatio;
 
+    minusx;
+    plusx;
+    minusy;
+    plusy;
+
     consoleReference;
     canvasReference;
     startTime;
@@ -25,6 +30,10 @@ export default class Experiment {
         this.canvasReference = canvasRef;
         this.numberX = 0.0;
         this.numberY = 0.0;
+        this.minusx = 2;
+        this.plusx = 2;
+        this.minusy = 2;
+        this.plusy = 2;
         this.maxIterations = document.querySelector("input[id*='maxIterations']").value;
         this.pointRatio = document.querySelector("input[id='ratio'").value/this.canvasReference.width;
         console.log(this.pointRatio)
@@ -44,8 +53,7 @@ export default class Experiment {
             realX = tempX;
             realY = tempY;
             if (realX * realY > 2) {
-                //console.log(iterations)
-                this.canvasReference.drawPoints(x, y, iterations);
+                this.canvasReference.drawPoints({x: x, y : y, it : iterations});
                 break;
             }
         }
@@ -54,12 +62,15 @@ export default class Experiment {
     startAnalyse() {
         this.consoleReference.print("Executing...");
         this.startTime = Date.now();
-        for (var x=-2; x<=2; x = x+this.pointRatio) {
-            for (var y=-2; y<=2; y = y+this.pointRatio) {
+        
+        this.startTime = Date.now();
+        for (var x=-this.minusx; x<=this.plusx; x = x+this.pointRatio) {
+            for (var y=-this.minusy; y<=this.plusy; y = y+this.pointRatio) {
                 //this.canvasReference.drawPoints(x,y, 0);
                 this.analysePoint(x,y)
             }
         }
+
         this.consoleReference.print("[INFO] Seconds Elapsed: "+ ( (Date.now() - this.startTime) /1000).toString());
     }
 

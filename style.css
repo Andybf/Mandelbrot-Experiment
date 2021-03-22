@@ -30,27 +30,15 @@ html {
 }
 
 body {
-    width: 1080px;
-    margin: auto
-}
-
-label {
-    padding-left: 10px;
-    padding-right: 5px;
-}
-
-.canvas-wrapper {
+    margin: auto;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 0px;
+    height: inherit;
 }
 
 .default-border {
     border: solid 1px #ddd;
     border-radius: 3px;
     padding: 5px;
-    box-shadow: 0 0 5px 4px whitesmoke;
 }
 
 .default-label {
@@ -60,21 +48,10 @@ label {
     align-items: center;
     font-size: 14px;
 }
-comp-console {
-    width: 400px;
-}
 
-.container {
-    display: flex;
-    justify-content: center;
-    column-gap: 20px;
-    margin-top: 20px
-}
-
-canvas.canvas {
-    padding: 0px;
-    width: inherit;
-    height: inherit;
+.default-input {
+    min-width: 75px;
+    box-shadow: none
 }
 
 .default-button {
@@ -87,7 +64,19 @@ canvas.canvas {
     color: #555;
 }
 
-section.console-control {
+
+
+/* Console ==================================================== */
+
+comp-console {
+    position: absolute;
+    min-width: 512px;
+    height: 256px;
+    display: none;
+    left: 120px;
+    bottom: 0;
+}
+section.console-header {
     background-image: linear-gradient(180deg, #fff, #f4f4f4);
     border: 2px solid #eee;
     border-radius: 5px 5px 0px 0px;
@@ -95,36 +84,41 @@ section.console-control {
     display: flex;
     justify-content: space-between;
 }
-
-.console-container {
-    min-width: 33%;
-}
-
-.canvas-container {
-    min-width: 33%;
-}
-
-.canvas-wrapper {
-    padding:0;
-    width: 640px;
-    height: 640px;
-}
-
-section.control-panel {
-    padding: 10px;
-    background-image: linear-gradient(180deg, #fff, #f4f4f4);
-    display: flex;
-    justify-content: center;
-    column-gap: 10px;
-}
-
 article.output-console {
     border-radius: 0px 0px 5px 5px;
     font-family: monospace;
     overflow: hidden scroll;
-    height: 502px;
+    min-height: 200px;
+    background-color: white;
 }
 
-input.default-input {
-    min-width: 75px;
+
+
+/* Canvas ===================================================== */
+
+comp-canvascontainer {
+    margin: auto;
+}
+comp-canvascontainer > canvas {
+    padding:0;
+}
+
+
+
+/* Control Panel ============================================== */
+
+comp-controlpanel.control-panel {
+    padding: 10px;
+    background-image: linear-gradient(180deg, #fff, #f4f4f4);
+    display: block;
+    width: 100px;
+}
+comp-controlpanel.control-panel > div {
+    margin-top: 15px;
+}
+comp-controlpanel.control-panel > div > input {
+    width: -webkit-fill-available;
+}
+comp-controlpanel.control-panel > div > button {
+    width: 100%;
 }

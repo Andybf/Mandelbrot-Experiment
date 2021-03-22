@@ -23,23 +23,15 @@ export default class Canvas extends HTMLElement {
         super();
         this.self = this
         this.innerHTML = `
-        
-            <section class="default-border console-control">
-                <label class="default-label">Canvas</label>
-                <button class="default-button default-border" id="clearCanvas" >Clear Canvas</button>
-            </section>
-
-            <section class="default-border canvas-wrapper">
-                <canvas class="canvas" id="canvas"></canvas>
-            </section>
+            <canvas class="canvas" style="border:dotted 2px #d9d6f7;" id="canvas"></canvas>
         `
     }
 
     connectedCallback() { // After Comp Load
         this.element = this.querySelector("canvas");
         this.context = this.element.getContext("2d");
-        this.width = parseFloat(getComputedStyle(this.element)['width'])
-        this.height = parseFloat(getComputedStyle(this.element)['height']);
+        this.width = window.window.innerHeight -10;
+        this.height = window.window.innerHeight -10;
         this.resizeDrawScreen();
         console.log("[INFO] Canvas Initialized.");
     }
@@ -70,14 +62,14 @@ export default class Canvas extends HTMLElement {
     }
     convertPointsToPixels(pointX,pointY) {
         return [
-             pointX * this.width/this.zoom + this.width/this.zoom*2,
-            -pointY * this.width/this.zoom + this.width/this.zoom*1.5
+             pointX * this.width/this.zoom + this.width/this.zoom,
+            -pointY * this.width/this.zoom + this.width/this.zoom
         ];
     }
-    drawPoints(x,y,lightLevel) {
-        var color = '#'+lightLevel.toString(16) + lightLevel.toString(16) + lightLevel.toString(16);
-        let pxCoords = this.convertPointsToPixels(x,y);
-        this.context.fillStyle = color;
+    drawPoints(data) {
+        var color = data.it.toString(16);
+        let pxCoords = this.convertPointsToPixels(data.x,data.y);
+        this.context.fillStyle = '#'+color+color+color;
         this.context.fillRect(pxCoords[0], pxCoords[1], .5, .5);
     }
     drawPixels(x,y) {

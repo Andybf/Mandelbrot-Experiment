@@ -16,20 +16,18 @@ export default class Console extends HTMLElement {
         super();
         this.consoleObj= document.querySelector("article[id*='output-console']");
         this.innerHTML = `
-        <section class="console-container">
-            <section class="default-border console-control">
-                <div>
-                    <label class="default-label">Console</label>
-                </div>
-                <div>
-                    <button class="default-button default-border" id="clearConsole">Clear Output</button>
-                </div>
-            </section>
-
-            <article class="output-console default-border" id="output-console" contenteditable="false">
-
-            </article>
+        <section class="default-border console-header">
+            <div>
+                <label class="default-label">Console</label>
+            </div>
+            <div>
+                <button class="default-button default-border" id="clearConsole">Clear Output</button>
+            </div>
         </section>
+
+        <article class="output-console default-border" id="output-console" contenteditable="false">
+
+        </article>
         `
     }
 
@@ -42,10 +40,13 @@ export default class Console extends HTMLElement {
     /* Class Methods =======================================================*/
 
     print(message) {
-        this.consoleObj.innerText+= message + "\n";
+        this.consoleObj.innerHTML += message + "</br>";
     }
     clearConsole() {
         let self = this.ownerDocument.querySelector("comp-console");
         self.consoleObj.innerText = '';
+    }
+    showHideSelf() {
+        this.style['display'] = this.style['display'] == "initial" ? "none" : "initial";
     }
 }
