@@ -41,6 +41,7 @@ export default class Console extends HTMLElement {
 
     print(message) {
         this.consoleObj.innerHTML += message + "</br>";
+        this.consoleObj.scrollTop = this.consoleObj.scrollHeight;
     }
     clearConsole() {
         let self = this.ownerDocument.querySelector("comp-console");

@@ -13,9 +13,10 @@ export default class Canvas extends HTMLElement {
     height;
     width;
     zoom;
+    locationX;
+    locationY;
     element;
     context;
-    
 
     /* Constructors =======================================================*/
 
@@ -30,13 +31,12 @@ export default class Canvas extends HTMLElement {
     connectedCallback() { // After Comp Load
         this.element = this.querySelector("canvas");
         this.context = this.element.getContext("2d");
-        this.width = window.window.innerHeight -10;
-        this.height = window.window.innerHeight -10;
+        this.width =936 //document.querySelector("canvas").style.height;
+        this.height = 936//document.querySelector("canvas").style.height;
+        this.element.style['height'] = window.window.innerHeight-10 + "px"
         this.resizeDrawScreen();
         console.log("[INFO] Canvas Initialized.");
     }
-
-
 
     /* Class Methods =======================================================*/
 
@@ -45,48 +45,25 @@ export default class Canvas extends HTMLElement {
         this.context.canvas.height = this.height;
         this.context.fillStyle = "#fff";
         this.context.fillRect(0,0, this.width, this.height);
-        //this.drawAxis();
     }
     clearCanvas() {
         this.context.clearRect(0,0, this.width, this.height);
         this.resizeDrawScreen();
     }
-    drawAxis() {
-        this.context.beginPath();
-        this.context.moveTo(this.width/this.zoom,0);
-        this.context.lineTo(this.width/this.zoom,this.height);
-        this.context.moveTo(0,this.height/this.zoom);
-        this.context.lineTo(this.width,this.height/this.zoom);
-        this.context.strokeStyle = "#ddd";
-        this.context.stroke();
-    }
+
     convertPointsToPixels(pointX,pointY) {
         return [
-             pointX * this.width/this.zoom + this.width/this.zoom,
-            -pointY * this.width/this.zoom + this.width/this.zoom
+            pointX * this.zoom+ this.locationX,
+            -pointY * this.zoom+ this.locationY
         ];
     }
     drawPoints(data) {
-        var color = data.it.toString(16);
         let pxCoords = this.convertPointsToPixels(data.x,data.y);
-        this.context.fillStyle = '#'+color+color+color;
-        this.context.fillRect(pxCoords[0], pxCoords[1], .5, .5);
+        this.context.fillStyle = 'hsl('+(240-data.it)+' 100% 50%)';
+        this.context.fillRect(pxCoords[0], pxCoords[1], 1, 1);
     }
     drawPixels(x,y) {
         this.context.fillStyle = "black";
         this.context.fillRect(x, y, 1, 1);
-    }
-    drawIndicator(label,x,y) {
-        var pxCoords = this.convertPointsToPixels(x ,y)
-        pxCoords[0] -= 3;
-        pxCoords[1] -= 10
-        this.context.beginPath();
-        this.context.arc(pxCoords[0]+3, pxCoords[1]-3, 10, 0, 2*Math.PI);
-        this.context.fillStyle = "#ccc";
-        this.context.fill();
-        this.context.stroke();
-        this.context.font = "10px Arial";
-        this.context.fillStyle = "black"
-        this.context.fillText(label,pxCoords[0],pxCoords[1])
     }
 }

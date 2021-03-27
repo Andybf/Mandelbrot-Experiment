@@ -18,7 +18,60 @@
 
     <body>
 
-        <comp-controlpanel class="control-panel default-border"></comp-controlpanel>
+        <section class="control-panel default-border">
+            <div style="display:none">
+                <label>Resolution in pixels</label>
+                <input type="number" class="default-input default-border"
+                    id="canvasResolution" value="1024" step="1" min="32" max="8192"
+                />
+            </div>
+            <div>
+                <label>Max Iterations</label>
+                <input type="number" class="default-input default-border"
+                    id="maxIterations" value="100" step="1" min="1" max="512"
+                />
+            </div>
+            <div>
+                <label>Zoom</label>
+                <input type="number" class="default-input default-border"
+                    id="zoom" value="2" step="0.001" min="0.0001" max="32"
+                />
+            </div>
+            <div>
+                <label>Point to Pixel Ratio</label>
+                <input type="number" class="default-input default-border"
+                    id="ratio" value="3" step="0.001" min="0.0001" max="32"
+                />
+            </div>
+            <div>
+                <label>Use 1:1 point to pixel Ratio</label>
+                <input type="checkbox" class="default-input default-border"
+                    id="use1to1ratio"
+                />
+            </div> 
+            <div>
+                <label>Coordinate X</label>
+                <input type="number" class="default-input default-border"
+                    id="rendX" value="0" step="0.01" min="-2" max="2"
+                />
+            </div>
+            <div>
+                <label>Coordinate Y</label>
+                <input type="number" class="default-input default-border"
+                    id="rendY" value="0" step="0.01" min="-2" max="2"
+                />
+            </div>
+            <div>
+                <button id="executeButton" class="default-button default-border">
+                    Execute
+                </button>
+            </div>
+            <div>
+                <button id="showConsole" class="default-button default-border">
+                    Show/Hide Console
+                </button>
+            </div>
+        </section>
         
         <comp-canvascontainer></comp-canvascontainer>
 

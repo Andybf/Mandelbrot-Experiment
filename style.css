@@ -88,7 +88,7 @@ article.output-console {
     border-radius: 0px 0px 5px 5px;
     font-family: monospace;
     overflow: hidden scroll;
-    min-height: 200px;
+    height: 200px;
     background-color: white;
 }
 
@@ -107,18 +107,18 @@ comp-canvascontainer > canvas {
 
 /* Control Panel ============================================== */
 
-comp-controlpanel.control-panel {
+section.control-panel {
     padding: 10px;
     background-image: linear-gradient(180deg, #fff, #f4f4f4);
     display: block;
-    width: 100px;
+    width: 128px;
 }
-comp-controlpanel.control-panel > div {
+section.control-panel > div {
     margin-top: 15px;
 }
-comp-controlpanel.control-panel > div > input {
+section.control-panel > div > input {
     width: -webkit-fill-available;
 }
-comp-controlpanel.control-panel > div > button {
+section.control-panel > div > button {
     width: 100%;
 }
