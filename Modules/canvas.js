@@ -46,9 +46,21 @@ export default class Canvas extends HTMLElement {
         this.context.fillStyle = "#fff";
         this.context.fillRect(0,0, this.width, this.height);
     }
+
     clearCanvas() {
         this.context.clearRect(0,0, this.width, this.height);
         this.resizeDrawScreen();
+    }
+
+    drawCartesianAxis(locX,locY) {
+        window.console.log(
+            locX,
+            locY
+        );
+        let pxCoords = this.convertPointsToPixels(locX,locY);
+        this.context.fillStyle = '#000000';
+        this.context.fillRect(pxCoords[0], 0, 1, this.height);
+        this.context.fillRect(0, pxCoords[1], this.width, 1);
     }
 
     convertPointsToPixels(pointX,pointY) {

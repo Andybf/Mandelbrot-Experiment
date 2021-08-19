@@ -35,22 +35,22 @@ export default class Experiment {
     }
 
     updateValues() {
-        window.console.log(document.querySelector('#rendX'))
         let visibleCoords =
             (this.canvasReference.width/2) /
             (this.canvasReference.width/Number(document.querySelector('#zoom').value))
         ;
-        let centerRenderX = Number(document.querySelector('#rendX').value);
-        let centerRenderY = Number(document.querySelector('#rendY').value);
-        this.minusx = visibleCoords - centerRenderX;
-        this.plusx  = visibleCoords + centerRenderX;
-        this.minusy = visibleCoords + centerRenderY;
-        this.plusy  = visibleCoords - centerRenderY;
+        this.centerRenderX = Number(document.querySelector('#rendX').value);
+        this.centerRenderY = Number(document.querySelector('#rendY').value);
+        this.minusx = visibleCoords - this.centerRenderX;
+        this.plusx  = visibleCoords + this.centerRenderX;
+        this.minusy = visibleCoords + this.centerRenderY;
+        this.plusy  = visibleCoords - this.centerRenderY;
         //console.log(this.minusx, this.plusx, this.minusy, this.plusy);
         this.maxIterations =
             Number(document.querySelector("input[id='maxIterations']").value)
         ;
-        this.pointRatio =
+        this.pointRatio = document.querySelector('#use1to1ratio').checked ?
+            Number(document.querySelector("input[id='zoom'").value/this.canvasReference.width) :
             Number(document.querySelector("input[id='ratio'").value/this.canvasReference.width)
         ;
         this.canvasReference.zoom =
@@ -59,11 +59,11 @@ export default class Experiment {
         //console.log(this.canvasReference.zoom)
         this.canvasReference.locationX =
             //Number(document.querySelector("input[id*='locX']").value)
-            -(centerRenderX)*this.canvasReference.zoom + (this.canvasReference.width/2) 
+            -(this.centerRenderX)*this.canvasReference.zoom + (this.canvasReference.width/2) 
         ;
         this.canvasReference.locationY =
             //Number(document.querySelector("input[id*='locY']").value)
-            -(centerRenderY)*this.canvasReference.zoom + (this.canvasReference.width/2) 
+            -(this.centerRenderY)*this.canvasReference.zoom + (this.canvasReference.width/2) 
         ;
     }
 
@@ -83,9 +83,13 @@ export default class Experiment {
                 break;
             }
         }
-        
     }
+
     startAnalyse() {
+        // this.canvasReference.drawCartesianAxis(
+        //     this.centerRenderX,
+        //     this.centerRenderY
+        // );
         this.consoleReference.print("Executing...");
         this.startTime = Date.now();
         for (var x=-this.minusx; x<=this.plusx; x = x+this.pointRatio) {
@@ -93,6 +97,7 @@ export default class Experiment {
                 this.analysePoint(x,y);
             }
         }
+        
         this.consoleReference.print("[INFO] Seconds Elapsed: "+ ( (Date.now() - this.startTime) /1000).toString());
     }
 
