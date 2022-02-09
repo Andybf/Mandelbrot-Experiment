@@ -1,20 +1,24 @@
-/*
- * Mandelbrot Experiment
- * Created By: Anderson Bucchianico
- * Date: 30/dec/2020
- * Type: Experimental Software
+/* 
+
+    Mandelbrot Experiment
+    Created by Anderson Bucchianico @ 2020 - 2022.
+    Licensed by General Public License v3
+
+    See https://www.gnu.org/licenses/gpl-3.0.en.html for more details.
+    Thank you.
+
 */
 
-import Canvas       from './Modules/canvas.js';
-import Console      from './Modules/console.js';
-import Experiment   from './Modules/experiment.js';
+import Canvas
+    from './Modules/canvas.js';
+import Experiment
+    from './Modules/experiment.js';
 
 customElements.define("comp-canvascontainer", Canvas);
-customElements.define("comp-console",         Console);
 
 let canvas = document.querySelector("comp-canvascontainer");
-let console = document.querySelector("comp-console");
 let experiment = new Experiment(canvas,console);
+canvas.experimentReference = experiment;
 
 document.querySelector("input[id*='canvasResolution']").addEventListener('change', (event) => {
     canvas.width = event.target.value;
@@ -47,32 +51,5 @@ document.querySelector("button[id='executeButton']").addEventListener('click', (
     canvas.clearCanvas();
     experiment.startAnalyse();
 });
-document.querySelector("button[id='showConsole']").addEventListener('click', (event) => {
-    console.showHideSelf();
-});
 
-document.querySelector("canvas").addEventListener("click", (event) => {
-    //window.console.log((event.offsetX/canvas.width),(event.offsetY/canvas.height));
-    let pointx = event.offsetX / (canvas.width/2);
-    let pointY = event.offsetY / (canvas.width/2);
-    canvas.drawCartesianAxis(pointx,pointY);
-});
-
-// document.querySelector("body").addEventListener('keydown', function(e) {
-//     switch(e.code) {
-//         case 'ArrowUp':
-//             inputY.value = (parseFloat(inputY.value) + 0.01).toFixed(2);
-//             break;
-//         case 'ArrowDown' :
-//             inputY.value = (parseFloat(inputY.value) - 0.01).toFixed(2);
-//             break;
-//         case 'ArrowLeft' :
-//             inputX.value = (parseFloat(inputX.value) - 0.01).toFixed(2);
-//             break;
-//         case 'ArrowRight' :
-//             inputX.value = (parseFloat(inputX.value) + 0.01).toFixed(2);
-//             break;
-//     }
-//     exp.isInputchanged();
-// });
 

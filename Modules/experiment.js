@@ -1,13 +1,15 @@
 /* 
- * Mandelbrot Experiment
- * Created By: Anderson Bucchianico
- * Date: 03/jan/2020
- * Type: Experimental Software
+
+    Mandelbrot Experiment
+    Created by Anderson Bucchianico @ 2020 - 2022.
+    Licensed by General Public License v3
+
+    See https://www.gnu.org/licenses/gpl-3.0.en.html for more details.
+    Thank you.
+
 */
 
 export default class Experiment {
-
-    /* Custom Atributes =======================================================*/
 
     numberX;
     numberY;
@@ -43,9 +45,8 @@ export default class Experiment {
         this.centerRenderY = Number(document.querySelector('#rendY').value);
         this.minusx = visibleCoords - this.centerRenderX;
         this.plusx  = visibleCoords + this.centerRenderX;
-        this.minusy = visibleCoords + this.centerRenderY;
-        this.plusy  = visibleCoords - this.centerRenderY;
-        //console.log(this.minusx, this.plusx, this.minusy, this.plusy);
+        this.minusy = visibleCoords - this.centerRenderY;
+        this.plusy  = visibleCoords + this.centerRenderY;
         this.maxIterations =
             Number(document.querySelector("input[id='maxIterations']").value)
         ;
@@ -53,22 +54,29 @@ export default class Experiment {
             Number(document.querySelector("input[id='zoom'").value/this.canvasReference.width) :
             Number(document.querySelector("input[id='ratio'").value/this.canvasReference.width)
         ;
-        this.canvasReference.zoom =
-            this.canvasReference.width/Number(document.querySelector("input[id*='zoom']").value)
+        this.canvasReference.zoom =  Number(document.querySelector("input[id*='zoom']").value);
+        this.canvasReference.zoomFactor =
+            this.canvasReference.width / Number(document.querySelector("input[id*='zoom']").value)
         ;
-        //console.log(this.canvasReference.zoom)
-        this.canvasReference.locationX =
-            //Number(document.querySelector("input[id*='locX']").value)
-            -(this.centerRenderX)*this.canvasReference.zoom + (this.canvasReference.width/2) 
+        this.canvasReference.centerViewPointX =
+            -(this.centerRenderX)*this.canvasReference.zoomFactor + (this.canvasReference.width/2) 
         ;
-        this.canvasReference.locationY =
-            //Number(document.querySelector("input[id*='locY']").value)
-            -(this.centerRenderY)*this.canvasReference.zoom + (this.canvasReference.width/2) 
+        this.canvasReference.centerViewPointY =
+            -(this.centerRenderY)*this.canvasReference.zoomFactor + (this.canvasReference.width/2) 
         ;
     }
 
-
     /* Class Methods =======================================================*/
+
+    startAnalyse() {
+        this.startTime = Date.now();
+        for (var x=-this.minusx; x<=this.plusx; x = x+this.pointRatio) {
+            for (var y=-this.minusy; y<=this.plusy; y = y+this.pointRatio) {
+                this.analysePoint(x,y);
+            }
+        }
+        console.log("[INFO] Seconds Elapsed: "+ ( (Date.now() - this.startTime) /1000).toString());
+    }
 
     analysePoint(x,y) {
         let realX = x;
@@ -79,26 +87,9 @@ export default class Experiment {
             realX = tempX;
             realY = tempY;
             if (realX * realY > 2) {
-                this.canvasReference.drawPoints({x: x, y : y, it : iterations});
+                this.canvasReference.drawPointInCoords(x, y, iterations);
                 break;
             }
         }
     }
-
-    startAnalyse() {
-        // this.canvasReference.drawCartesianAxis(
-        //     this.centerRenderX,
-        //     this.centerRenderY
-        // );
-        this.consoleReference.print("Executing...");
-        this.startTime = Date.now();
-        for (var x=-this.minusx; x<=this.plusx; x = x+this.pointRatio) {
-            for (var y=-this.minusy; y<=this.plusy; y = y+this.pointRatio) {
-                this.analysePoint(x,y);
-            }
-        }
-        
-        this.consoleReference.print("[INFO] Seconds Elapsed: "+ ( (Date.now() - this.startTime) /1000).toString());
-    }
-
 }

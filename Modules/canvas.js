@@ -1,81 +1,103 @@
 /* 
- * Mandelbrot Experiment
- * Created By: Anderson Bucchianico
- * Date: 02/jan/2020
- * Type: Experimental Software
+
+    Mandelbrot Experiment
+    Created by Anderson Bucchianico @ 2020 - 2022.
+    Licensed by General Public License v3
+
+    See https://www.gnu.org/licenses/gpl-3.0.en.html for more details.
+    Thank you.
+
 */
 
 export default class Canvas extends HTMLElement {
-    
-    /* Custom Atributes =======================================================*/
 
-    self;
     height;
     width;
+    zoomFactor;
     zoom;
-    locationX;
-    locationY;
-    element;
-    context;
+    centerViewPointX;
+    centerViewPointY;
+    canvasContext;
+    experimentReference;
 
-    /* Constructors =======================================================*/
-
-    constructor() { // When Comp Is Created;
+    constructor() {
         super();
-        this.self = this
-        this.innerHTML = `
-            <canvas class="canvas" style="border:dotted 2px #d9d6f7;" id="canvas"></canvas>
-        `
+        this.innerHTML = `<canvas class="canvas" style="border:dotted 2px #252525;" id="canvas"></canvas>`
     }
 
-    connectedCallback() { // After Comp Load
-        this.element = this.querySelector("canvas");
-        this.context = this.element.getContext("2d");
-        this.width =936 //document.querySelector("canvas").style.height;
-        this.height = 936//document.querySelector("canvas").style.height;
-        this.element.style['height'] = window.window.innerHeight-10 + "px"
+    connectedCallback() {
+        let canvasDomElement = this.querySelector("canvas");
+        canvasDomElement.style.height = window.window.innerHeight-10 + "px";
+        canvasDomElement.style.width = canvasDomElement.style['height'];
+        this.canvasContext = canvasDomElement.getContext("2d");
+        this.width = Number(canvasDomElement.style.height.replace("px",''));
+        this.height = Number(canvasDomElement.style.width.replace("px",''));
         this.resizeDrawScreen();
+        canvasDomElement.addEventListener("wheel", this.onWheelScrollOnCanvas);
+        canvasDomElement.addEventListener("click", this.onClickOnCanvas);
         console.log("[INFO] Canvas Initialized.");
     }
 
-    /* Class Methods =======================================================*/
+    /* Events =============================================================== */
 
-    resizeDrawScreen() {
-        this.context.canvas.width = this.width;
-        this.context.canvas.height = this.height;
-        this.context.fillStyle = "#fff";
-        this.context.fillRect(0,0, this.width, this.height);
+    onWheelScrollOnCanvas(event) {
+        let actionCoords = this.parentNode.getEventCoordAction(event);
+        document.querySelector("input[id*='rendX']").value = actionCoords['x'];
+        document.querySelector("input[id*='rendY']").value = actionCoords['y'];
+    
+        let zoomValue = Number(document.querySelector("input[id*='zoom']").value);
+        zoomValue = event.deltaY < 0 ? zoomValue-(zoomValue/10) : zoomValue+(zoomValue/10);
+        document.querySelector("input[id*='zoom']").value = zoomValue;
+        this.parentNode.clearCanvas();
+        this.parentNode.experimentReference.updateValues();
+        this.parentNode.experimentReference.startAnalyse();
     }
 
+    onClickOnCanvas(event) {
+        let actionCoords = this.parentNode.getEventCoordAction(event);
+        this.parentNode.drawCoordIndicator(actionCoords['x'], actionCoords['y']);
+    }
+
+    getEventCoordAction(event) {
+        return {
+            x : (event.offsetX - this.centerViewPointX) / (this.width/this.zoom),
+            y : (event.offsetY - this.centerViewPointY) / (this.height/this.zoom)
+        };
+    }
+
+    /* Class Methods ======================================================== */
+
     clearCanvas() {
-        this.context.clearRect(0,0, this.width, this.height);
+        this.canvasContext.clearRect(0,0, this.width, this.height);
         this.resizeDrawScreen();
     }
 
-    drawCartesianAxis(locX,locY) {
-        window.console.log(
-            locX,
-            locY
-        );
+    resizeDrawScreen() {
+        this.canvasContext.canvas.width = this.width;
+        this.canvasContext.canvas.height = this.height;
+        this.canvasContext.fillStyle = "#000";
+        this.canvasContext.fillRect(0,0, this.width, this.height);
+    }
+
+    drawCoordIndicator(locX,locY) {
         let pxCoords = this.convertPointsToPixels(locX,locY);
-        this.context.fillStyle = '#000000';
-        this.context.fillRect(pxCoords[0], 0, 1, this.height);
-        this.context.fillRect(0, pxCoords[1], this.width, 1);
+        this.canvasContext.fillStyle = '#FFFFFF';
+        this.canvasContext.fillRect(pxCoords[0], 0, 1, this.height);
+        this.canvasContext.fillRect(0, pxCoords[1], this.width, 1);
+        this.canvasContext.font = "10px Arial"
+        this.canvasContext.fillText(`X: ${locX} | Y: ${locY}`, pxCoords[0], pxCoords[1]);
     }
 
     convertPointsToPixels(pointX,pointY) {
         return [
-            pointX * this.zoom+ this.locationX,
-            -pointY * this.zoom+ this.locationY
+            pointX * this.zoomFactor+ this.centerViewPointX,
+            pointY * this.zoomFactor+ this.centerViewPointY
         ];
     }
-    drawPoints(data) {
-        let pxCoords = this.convertPointsToPixels(data.x,data.y);
-        this.context.fillStyle = 'hsl('+(240-data.it)+' 100% 50%)';
-        this.context.fillRect(pxCoords[0], pxCoords[1], 1, 1);
-    }
-    drawPixels(x,y) {
-        this.context.fillStyle = "black";
-        this.context.fillRect(x, y, 1, 1);
+
+    drawPointInCoords(x, y, it) {
+        let pxCoords = this.convertPointsToPixels(x,y);
+        this.canvasContext.fillStyle = 'hsl('+(240+it)+' 100% 50%)';
+        this.canvasContext.fillRect(pxCoords[0], pxCoords[1], 1, 1);
     }
 }
